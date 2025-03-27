@@ -69,7 +69,7 @@ ALLOWED_MODEL_TYPES_1 = {
 # Synchronize on blocks roughly every 30 minutes.
 SYNC_BLOCK_CADENCE = 150
 # Delay at least as long as the sync block cadence with an additional buffer.
-EVAL_BLOCK_DELAY = SYNC_BLOCK_CADENCE #+ 100
+EVAL_BLOCK_DELAY = 0 #SYNC_BLOCK_CADENCE #+ 100
 
 MODEL_CONSTRAINTS_BY_COMPETITION_ID: Dict[CompetitionId, ModelConstraints] = {
     CompetitionId.RES3B_MODEL: ModelConstraints(
