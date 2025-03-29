@@ -1010,7 +1010,7 @@ class Validator:
                             ttl=430,
                             mode="spawn",
                         )
-                        logging.info(f"model is successfully with {str(score)} and {str(score_details)}")
+                        logging.info(f"model is successfully evaluated with {str(score)} and {str(score_details)}")
                     del model_i
 
                 except Exception as e:
@@ -1046,9 +1046,6 @@ class Validator:
             self.weights = self.competition_tracker.get_subnet_weights(
                 competition_schedule
             )
-        logging.info(
-                    f"Weights after evaluating: {str(self.weights)}"
-                )
         
         # Prioritize models for keeping up to the sample_min for the next eval loop.
         # If the model has any significant weight, prioritize by weight with greater weights being kept first.
