@@ -157,18 +157,14 @@ class SubsetLoader(IterableDataset):
                     timeout=15,
                 )
                 response.raise_for_status()
-                total_chunks = 0
                 for row in response.json()["rows"]:
                     content = self._get_content_from_row(row)
                     contents = split_content(content, self.tokenizer)
+                    random.shuffle(contents)
                     for content in contents:
-                        if total_chunks < self.batch_size:
-                            input_ids = self.tokenizer(content, truncation=True)["input_ids"]
-                            self.buffer += input_ids
-                            self.buffer += [self.tokenizer.eos_token_id]
-                            total_chunks += 1
-                        else:
-                            break
+                        input_ids = self.tokenizer(content, truncation=True)["input_ids"]
+                        self.buffer += input_ids
+                        self.buffer += [self.tokenizer.eos_token_id]
 
                 break
 
