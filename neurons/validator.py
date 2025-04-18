@@ -906,7 +906,7 @@ class Validator:
         load_data_perf = PerfMonitor("Eval: Load data")
 
         # Try to synchronize the data used by validators.
-        seed = self._get_seed()
+        seed = None #self._get_seed()
         eval_tasks: typing.List[EvalTask] = []
         data_loaders: typing.List[SubsetLoader] = []
         samples: typing.List[typing.List[EvalSample]] = []

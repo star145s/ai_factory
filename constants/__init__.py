@@ -53,11 +53,11 @@ WEIGHT_SYNC_MINER_MIN_PERCENT = 0.05
 
 # Validator eval batch size.
 BATCH_SIZE = 1
-MAX_BATCHES_PER_DATASET = 32
+MAX_BATCHES_PER_DATASET = 1024
 # Validators number of pages to eval over miners on each step.
 
 # These well be used after activation block
-PAGES_PER_EVAL_RES = 1
+PAGES_PER_EVAL_RES = 10
 
 # A mapping of block numbers to the supported model types as of that block.
 ALLOWED_MODEL_TYPES_1 = {
