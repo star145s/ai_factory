@@ -79,6 +79,8 @@ from factory.dataset import SubsetLoader
 from factory.datasets.factory import DatasetLoaderFactory
 from factory.eval.sample import EvalSample
 from factory.validation import ScoreDetails
+import requests
+import numpy as np
 
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
@@ -104,7 +106,20 @@ class PerUIDEvalState:
         default_factory=dict
     )
 
-
+def get_workshop_scores():
+    url = "https://star145s-weight-reveal.hf.space/scores"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        data_list = response.json()
+        data_array = np.array(data_list)
+        return data_array
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
+    
+def get_conference_scores():
+    pass
 class Validator:
     MODEL_TRACKER_FILENAME = "model_tracker.pickle"
     COMPETITION_TRACKER_FILENAME = "competition_tracker.pickle"
@@ -756,17 +771,22 @@ class Validator:
             try:
                 with self.weight_lock:
                     self.weights.nan_to_num(0.0)
-                    weights_to_set = self.weights
-                    # Temporary update
-                    validator_uid = 0
-                    self.weights[:] = 0
-                    self.weights[validator_uid] = 1.0
+                    training_weights = self.weights.numpy()
+                    workshop_weights = get_workshop_scores()
+                    conference_weights = np.zeros_like(training_weights)
+
+                    #temperary burn conference emission
+                    conference_weights[0] = 1.
+                    
+                    total_weights = training_weights*constants.TRAINING_WEIGHT +\
+                                        workshop_weights*constants.WORKSHOP_WEIGHT +\
+                                        conference_weights*constants.CONFERENCE_WEIGHT
 
                 return self.weights_subtensor.set_weights(
                     netuid=self.config.netuid,
                     wallet=self.wallet,
                     uids=uids,
-                    weights=weights_to_set.numpy(),
+                    weights=total_weights,
                     wait_for_inclusion=True,
                     #version_key=constants.weights_version_key,
                     max_retries=1,
