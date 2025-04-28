@@ -62,8 +62,6 @@ HF_ACCESS_TOKEN="YOUR_HF_ACCESS_TOKEN"
 
 ## Starting the Miner
 
-Due to rate limiting by the Bittensor chain you may only upload a model every 20 minutes.
-
 You can manually upload with the following command:
 ```shell
 python upload_model.py --load_model_dir <path to model> --competition_id 0 --hf_repo_id my-username/my-project --wallet.name coldkey --wallet.hotkey hotkey

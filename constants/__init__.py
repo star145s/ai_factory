@@ -66,6 +66,11 @@ ALLOWED_MODEL_TYPES_1 = {
     Qwen2ForCausalLM,
 }
 
+# Emission distribution
+TRAINING_WEIGHT = 0.3
+CONFERENCE_WEIGHT = 0.5
+WORKSHOP_WEIGHT = 0.2
+
 # Synchronize on blocks roughly every 30 minutes.
 SYNC_BLOCK_CADENCE = 150
 # Delay at least as long as the sync block cadence with an additional buffer.
