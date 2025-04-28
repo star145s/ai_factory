@@ -758,7 +758,7 @@ class Validator:
                     self.weights.nan_to_num(0.0)
                     weights_to_set = self.weights
                     # Temporary update
-                    validator_uid = 10
+                    validator_uid = 0
                     self.weights[:] = 0
                     self.weights[validator_uid] = 1.0
 
