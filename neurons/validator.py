@@ -780,7 +780,7 @@ class Validator:
                     
                     total_weights = training_weights*constants.TRAINING_WEIGHT +\
                                         workshop_weights*constants.WORKSHOP_WEIGHT +\
-                                        conference_weights*constants.TRAINING_WEIGHT
+                                        conference_weights*constants.CONFERENCE_WEIGHT
 
                 return self.weights_subtensor.set_weights(
                     netuid=self.config.netuid,
