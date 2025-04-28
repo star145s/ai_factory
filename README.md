@@ -26,15 +26,13 @@ This track aims to develop AI models capable of generating original scientific i
 
 The demo track serves as a platform to continuously produce AI models addressing specific problems, aiming to impress end-users and deliver value across various industries. We envision that, in the future, models from the research track could automate the ideation process for the demo track, reducing the need for manual brainstorming of intriguing AI topics.
 
-## Roadmap
+## AI Factory Conference
 
-Our planned milestones are as follows:
+The AI Factory Conference is a decentralized research event that leverages the Bittensor network’s token emissions to incentivize high-quality AI research and peer review. Miners across the network are called upon to submit novel work, review their peers’ submissions, and collaboratively elevate the state of the art in machine learning and related fields.
 
-1. **Q2 2025:** Launch the first competition focusing on "Scientist AI" to kickstart our initiatives.
+## Community Workshop
 
-2. **Q4 2025:** Initiate the demo track, providing a continuous platform for showcasing AI solutions.
-
-3. **From 2026:** Officially deploy the winning models for demo purposes
+Miners are invited to **contribute knowledge** by researching and presenting AI topics or papers (original or survey) in a concise video format. Approved presentations earn a share of Bittensor emissions and drive community learning.
 
 ## Getting Started
 To set up and participate in AI-Factory, please refer to the following guides:
@@ -45,6 +43,10 @@ See [Miner Setup](docs/miner.md#getting-started) to learn how to set up a Miner.
 
 See [Validator Setup](docs/validator.md#getting-started) to learn how to set up a Validator.
 
+See [Community Workshop](docs/workshop.md#getting-started) to learn how to submit presentation.
+
+See [AI Factory Conference](docs/workshop.md#getting-started) to learn about the conference.
+
 Our codebase is adapted from Subnet 9, managed by Macrocosmos, which focuses on pre-training models within the Bittensor ecosystem. We extend our gratitude to Macrocosmos for providing a solid foundation for our development. Over time, we have enhanced and tailored the code to align with our future plans and objectives.​
 
 ## Contact Us
@@ -53,7 +55,7 @@ For inquiries, collaborations, or more information:
 
 - [Discord](https://discord.gg/AMeC2t8F8W)
 
-- [Website]()
+- [Website](https://www.aifact.io/)
 
 - [Twitter](https://twitter.com/AI_Factory)
 
