@@ -6,9 +6,11 @@
 
 - [About AI-Factory](#about-ai-factory)
 - [Competition Tracks](#competition-tracks)
-- [Roadmap](#roadmap)
+- [AI Factory Conference](#ai-factory-conference)
+- [Community Workshop](#community-workshop)
 - [Getting Started](#getting-started)
 - [Contact Us](#contact-us)
+
 
 ## About AI-Factory
 
@@ -59,4 +61,3 @@ For inquiries, collaborations, or more information:
 
 - [Twitter](https://twitter.com/AI_Factory)
 
-Join us in revolutionizing the future of specialized AI development!
