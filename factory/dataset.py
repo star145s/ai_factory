@@ -160,7 +160,7 @@ class SubsetLoader(IterableDataset):
                 for row in response.json()["rows"]:
                     content = self._get_content_from_row(row)
                     contents = split_content(content, self.tokenizer)
-                    random.shuffle(contents)
+                    
                     for content in contents:
                         input_ids = self.tokenizer(content, truncation=True)["input_ids"]
                         self.buffer += input_ids

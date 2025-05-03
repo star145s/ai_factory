@@ -1,4 +1,4 @@
-def tokenize_and_chunk_text(text, tokenizer, chunk_size=4096, overlap_size=512):
+def tokenize_and_chunk_text(text, tokenizer, chunk_size=4096, overlap_size=0):
     # Tokenize the text
     tokens = tokenizer.encode(text, add_special_tokens=False)
     
