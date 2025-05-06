@@ -777,6 +777,10 @@ class Validator:
 
                     #temperary burn conference emission
                     conference_weights[0] = 1.
+
+                    # if there is no submission, burn to owner uid
+                    if sum(workshop_weights) == 0:
+                        workshop_weights[0] = 1.
                     
                     total_weights = training_weights*constants.TRAINING_WEIGHT +\
                                         workshop_weights*constants.WORKSHOP_WEIGHT +\
