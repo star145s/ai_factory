@@ -34,7 +34,6 @@ def check_for_reasonable_output(
     Returns:
         bool: If the model generates reasonable outputs.
     """
-    return True
     # Generate 20 tokens of output from the model for each prompt.
     output_length = 20
     # Only take the last 20 tokens since otherwise we also get the prompt ids.
@@ -77,6 +76,11 @@ def check_for_reasonable_output(
     # Passed all the checks, return True.
     return True
 
+def accuracy(logits, labels, pad_token_id):
+    predictions = torch.argmax(logits, dim=1)
+    predictions = predictions[labels!=pad_token_id]
+    labels = labels[labels!=pad_token_id]
+    return (labels != predictions).float().mean() + 1e-8
 
 def compute_text_loss(
     model: PreTrainedModel,
@@ -133,9 +137,7 @@ def compute_text_loss(
 
                     # If sample unpacking is used,
                     # create a mask to indicate location of PAD tokens.
-                    # Note, PAD tokens are always set to EOS tokens,
-                    # For this reason, we want to ignore all but the
-                    # first EOS token (the real one)
+                
                     pad_mask = shift_labels == pad_token_id
                     zeros = torch.zeros_like(shift_labels[..., :1])
                     pad_mask = torch.cat((zeros, pad_mask[..., :-1]), dim=-1).bool()
@@ -148,7 +150,8 @@ def compute_text_loss(
                 shift_logits = shift_logits.view(-1, model.config.vocab_size)
                 shift_labels = shift_labels.view(-1)
                 loss = loss_fct(shift_logits, shift_labels).item()
-
+                accuracy_loss = accuracy(shift_logits, shift_labels, pad_token_id).item()
+                loss = loss * accuracy_loss
                 losses.append(loss)
             except Exception as e:
                 logging.error(
