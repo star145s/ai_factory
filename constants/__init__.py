@@ -68,8 +68,8 @@ ALLOWED_MODEL_TYPES_1 = {
 
 # Emission distribution
 TRAINING_WEIGHT = 0.3
-CONFERENCE_WEIGHT = 0.5
-WORKSHOP_WEIGHT = 0.2
+CONFERENCE_WEIGHT = 0.0
+WORKSHOP_WEIGHT = 0.7
 
 # Synchronize on blocks roughly every 30 minutes.
 SYNC_BLOCK_CADENCE = 150
@@ -78,11 +78,11 @@ EVAL_BLOCK_DELAY = SYNC_BLOCK_CADENCE #+ 100
 
 MODEL_CONSTRAINTS_BY_COMPETITION_ID: Dict[CompetitionId, ModelConstraints] = {
     CompetitionId.RES3B_MODEL: ModelConstraints(
-        max_model_parameter_size=500_000_000,
-        min_model_parameter_size=400_000_000,
+        max_model_parameter_size=4_000_000_000,
+        min_model_parameter_size=3_000_000_000,
         sequence_length=4096,
         allowed_architectures=ALLOWED_MODEL_TYPES_1,
-        tokenizer="Xenova/gpt-4",
+        tokenizer="ai-factory/giant",
         kwargs={
             "torch_dtype": torch.bfloat16,
             #"attn_implementation": "flash_attention_2",
@@ -112,7 +112,29 @@ COMPETITION_SCHEDULE_BY_BLOCK: List[Tuple[int, List[Competition]]] = [
                             "batch_size": BATCH_SIZE,
                             "num_pages": PAGES_PER_EVAL_RES,
                         },
-                        weight=1.0,
+                        weight=0.4,
+                    ),
+                    EvalTask(
+                        name="REASONING",
+                        method_id=EvalMethodId.TEXT_LOSS,
+                        dataset_id=DatasetId.REASONING,
+                        normalization_id=NormalizationId.NONE,
+                        dataset_kwargs={
+                            "batch_size": BATCH_SIZE,
+                            "num_pages": PAGES_PER_EVAL_RES,
+                        },
+                        weight=0.3,
+                    ),
+                    EvalTask(
+                        name="STACKEXCHANGE",
+                        method_id=EvalMethodId.TEXT_LOSS,
+                        dataset_id=DatasetId.STACKEXCHANGE,
+                        normalization_id=NormalizationId.NONE,
+                        dataset_kwargs={
+                            "batch_size": BATCH_SIZE,
+                            "num_pages": PAGES_PER_EVAL_RES,
+                        },
+                        weight=0.3,
                     ),
                 ],
             ),

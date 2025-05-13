@@ -166,7 +166,7 @@ def score_model(
                         model=model.pt_model,
                         batches=samples,
                         device=device,
-                        pad_token_id=tokenizer.eos_token_id,
+                        pad_token_id=tokenizer.pad_token_id,
                     )
                 case _:
                     raise ValueError(f"Unhandled evaluation method {task.method_id}.")

@@ -245,3 +245,17 @@ class SubsetArxivLoader(SubsetLoader):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+class SubsetReasoningLoader(SubsetLoader):
+    max_pages: int = 221994
+    name: str = "ai-factory/glaiveai-reasoning-v1-20m-chat"
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+class SubsetStackExchangeLoader(SubsetLoader):
+    max_pages: int = 252808
+    name: str = "ai-factory/red_pajama_subset_stackexchange_subset"
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)

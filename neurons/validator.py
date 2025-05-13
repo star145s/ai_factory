@@ -1035,7 +1035,7 @@ class Validator:
                                 samples,
                                 self.config.device,
                             ),
-                            ttl=430,
+                            ttl=4300,
                             mode="spawn",
                         )
                         logging.info(f"model is successfully evaluated with {str(score)} and {str(score_details)}")

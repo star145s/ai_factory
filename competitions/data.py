@@ -4,7 +4,7 @@ from enum import IntEnum
 class CompetitionId(IntEnum):
     """Unique identifiers for each competition."""
 
-    RES3B_MODEL = 0
+    RES3B_MODEL = 1
 
     # Overwrite the default __repr__, which doesn't work with
     # bt.logging for some unknown reason.

@@ -4,15 +4,26 @@ The **Research Track** aims to develop artificial intelligence (AI) systems capa
 
 DeepSeek-R1 has demonstrated that applying RL directly to a base model can lead to the emergence of sophisticated reasoning behaviors, including self-verification, reflection, and extended chain-of-thought generation. This approach has enabled the model to achieve performance levels comparable to leading AI systems, such as OpenAI's o1–1217, while reducing reliance on supervised fine-tuning. [Source](https://arxiv.org/abs/2501.12948)
 
-## Initial Phase
+## Initial Phase (Completed)
 
 In the initial phase of the Research Track, participants will pretrain a 500-million-parameter model using a subset of the arXiv dataset from togethercomputer/RedPajama-Data-1T . This foundational step will establish a robust base for subsequent training phases.
 
+## Second Phase (Ongoing)
+
+In this phase, the model scale will be increased to 4 billion parameters, and the training datasets will be extended. Below is the competition information:
+
+### Model Constraints:
+- **Model types**: Qwen, LLaMA, DeepSeek  
+- **Model size**: 3–4 billion parameters  
+- **Tokenizer**: `ai-factory/giant`
+
+### Training and Testing Data:
+- `ai-factory/red_pajama_subset_arxiv_subset`: ArXiv papers truncated to 4096-token chunks.  
+- `ai-factory/red_pajama_subset_stackexchange_subset`: Samples are formatted using a chat template with two roles: `"user"` (representing questions) and `"other"` (representing answers).  
+- `ai-factory/glaiveai-reasoning-v1-20m-chat`: Samples are formatted using a chat template with two roles: `"user"` (representing questions) and `"me"` (representing the AI).  
+
+
 ## Future Plans
-
-- **Scaling the Model:** Expanding the model to 3 billion parameters to enhance its capacity for complex reasoning and idea generation.
-
-- **Incorporating Long-Form Reasoning Datasets:** Training the model with datasets distilled from DeepSeek to further refine its reasoning abilities.
 
 - **Developing Novelty and Correctness Metrics:** Establishing new metrics to assess the originality and accuracy of the generated scientific ideas.
 

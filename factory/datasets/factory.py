@@ -3,6 +3,8 @@ from typing import Any, Dict
 from factory.dataset import (
     SubsetLoader,
     SubsetArxivLoader,
+    SubsetReasoningLoader,
+    SubsetStackExchangeLoader
 )
 
 from factory.datasets.ids import DatasetId
@@ -23,6 +25,20 @@ class DatasetLoaderFactory:
         match dataset_id:
             case DatasetId.ARXIV:
                 return SubsetArxivLoader(
+                    random_seed=seed,
+                    sequence_length=sequence_length,
+                    tokenizer=tokenizer,
+                    **dataset_kwargs,
+                )
+            case DatasetId.REASONING:
+                return SubsetReasoningLoader(
+                    random_seed=seed,
+                    sequence_length=sequence_length,
+                    tokenizer=tokenizer,
+                    **dataset_kwargs,
+                )
+            case DatasetId.STACKEXCHANGE:
+                return SubsetStackExchangeLoader(
                     random_seed=seed,
                     sequence_length=sequence_length,
                     tokenizer=tokenizer,

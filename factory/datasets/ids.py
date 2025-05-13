@@ -13,3 +13,5 @@ class DatasetId(IntEnum):
     FINEMATH3P = 7
     WEBMATH3P = 8
     ARXIV = 9
+    REASONING = 10
+    STACKEXCHANGE = 11
