@@ -151,7 +151,7 @@ def compute_text_loss(
                 shift_labels = shift_labels.view(-1)
                 loss = loss_fct(shift_logits, shift_labels).item()
                 accuracy_loss = accuracy(shift_logits, shift_labels, pad_token_id).item()
-                loss = loss * accuracy_loss
+                loss = loss * (1 + accuracy_loss)
                 losses.append(loss)
             except Exception as e:
                 logging.error(
