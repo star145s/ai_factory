@@ -32,7 +32,6 @@ from taoverse.model.eval.task import EvalTask
 from factory.eval.method import EvalMethodId, compute_text_loss
 from factory.eval.sample import EvalSample
 
-
 def iswin(
     loss_i: float,
     loss_j: float,
@@ -68,53 +67,80 @@ def iswin(
     )
     return loss_i < loss_j
 
-
+def is_close(loss_i, loss_j, block_i, block_j, min_diff):
+    if abs(loss_i - loss_j) < min_diff and block_i < block_j:
+        return False 
+    return True
+    
 def compute_wins(
     uids: typing.List[int],
     uid_to_score: typing.Dict[int, float],
     uid_to_block: typing.Dict[int, int],
     epsilon_func: EpsilonFunc,
     current_block: int,
+    min_diff: float,
+    max_diff: float
 ) -> typing.Tuple[typing.Dict[int, int], typing.Dict[int, float]]:
     """
-    Computes the wins and win rate for each model based on loss comparison.
+    Computes the number of wins and win rate for each UID based on pairwise comparisons 
+    of their scores and block advantages.
 
-    Parameters:
-        uids (list): A list of uids to compare.
-        uid_to_score (dict): A dictionary of scores for each uid.
-        uid_to_block (dict): A dictionary of blocks for each uid.
-        epsilon_func (EpsilonFunc): Function that determines how much advantage to give to the earlier block.
-        current_block: The current block.
+    Args:
+        uids (List[int]): List of unique identifiers for models.
+        uid_to_score (Dict[int, float]): Mapping from UID to its score.
+        uid_to_block (Dict[int, int]): Mapping from UID to its block number.
+        epsilon_func (EpsilonFunc): Function to compute acceptable score difference
+                                    based on block difference.
+        current_block (int): The current block number.
 
     Returns:
-        tuple: A tuple containing two dictionaries, one for wins and one for win rates.
+        Tuple[Dict[int, int], Dict[int, float]]: 
+            - Dictionary mapping each UID to its number of wins.
+            - Dictionary mapping each UID to its win rate.
     """
     wins = {uid: 0 for uid in uids}
-    win_rate = {uid: 0 for uid in uids}
+    win_rate = {uid: 0.0 for uid in uids}
+    min_score = min(uid_to_score.values())
+
     for uid_i in uids:
+        # Skip models that are significantly worse than the best one
+        if abs(uid_to_score[uid_i] - min_score) > max_diff:
+            win_rate[uid_i] = 0.0
+            continue
+
+        # Skip models that are too close to any other model (to avoid uncertainty)
+        if any(
+            uid_i != uid_j and is_close(
+                uid_to_score[uid_i],
+                uid_to_score[uid_j],
+                uid_to_block[uid_i],
+                uid_to_block[uid_j],
+                min_diff
+            )
+            for uid_j in uids
+        ):
+            win_rate[uid_i] = 0.0
+            continue
+
+        # Count wins against all other models
         total_matches = 0
         for uid_j in uids:
             if uid_i == uid_j:
                 continue
-
-            wins[uid_i] += (
-                1
-                if iswin(
-                    uid_to_score[uid_i],
-                    uid_to_score[uid_j],
-                    uid_to_block[uid_i],
-                    uid_to_block[uid_j],
-                    epsilon_func,
-                    current_block,
-                )
-                else 0
-            )
             total_matches += 1
-        # Calculate win rate for uid i. Default win_rate to 1 for the case of no matches.
-        win_rate[uid_i] = wins[uid_i] / total_matches if total_matches > 0 else 1
+            if iswin(
+                uid_to_score[uid_i],
+                uid_to_score[uid_j],
+                uid_to_block[uid_i],
+                uid_to_block[uid_j],
+                epsilon_func,
+                current_block,
+            ):
+                wins[uid_i] += 1
+
+        win_rate[uid_i] = wins[uid_i] / total_matches if total_matches > 0 else 1.0
 
     return wins, win_rate
-
 
 @dataclasses.dataclass
 class ScoreDetails:
