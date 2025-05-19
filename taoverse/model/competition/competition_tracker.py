@@ -95,10 +95,6 @@ class CompetitionTracker:
                     # Today uids can only participate in one competition so += and = would be equivalent.
                     subnet_weights[i] += comp_weights[i] * competition.reward_percentage
 
-        # Normalize weights again in case a competition hasn't run yet.
-        # In the case that in Block X we have Competition 1 at 100%, but Block X+1 we have
-        # Competition 1 at 80% and Competition 2 at 20%, but we haven't run Competition 2 yet.
-        # This ensures we still return 1 for the winner of competition 1 instead of 0.8.
         subnet_weights /= subnet_weights.sum()
         subnet_weights = subnet_weights.nan_to_num(0.0)
 
