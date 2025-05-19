@@ -856,6 +856,41 @@ class Validator:
         except:
             logging.trace(f"Failed to get hash of sync block. Using fallback seed.")
             return None
+    
+    def check_dup_hash(self, uids, uid_to_state):
+        """
+        Filters out duplicate models based on their metadata hash, keeping only the earliest block version 
+        for each unique model hash.
+
+        This function is useful for detecting and removing cloned or duplicate models that share the same 
+        identifier hash. Among duplicates, the model with the earliest (lowest) `block` value is retained.
+
+        Args:
+            uids (List[int]): A list of unique identifiers (UIDs) representing different models or nodes.
+            uid_to_block (dict): A dictionary mapping each UID to its associated block number. This argument 
+                                is not modified but is referenced for context.
+
+        Returns:
+            List[int]: A filtered list of UIDs such that only one UID per unique model hash is retained,
+                    specifically the one with the lowest block number among duplicates.
+        """
+        seen = {}
+        for uid_i in uids:
+            # Check if the model is a clone or not
+            with self.metagraph_lock:
+                hotkey = self.metagraph.hotkeys[uid_i]
+
+            model_i_metadata = self.model_tracker.get_model_metadata_for_miner_hotkey(
+                hotkey
+            )
+
+            if model_i_metadata.id.secure_hash not in seen:
+                seen[model_i_metadata.id.secure_hash] = (uid_i, model_i_metadata.block)
+            else:
+                if model_i_metadata.block < seen[model_i_metadata.id.secure_hash][1]:
+                    seen[model_i_metadata.id.secure_hash] = (uid_i, model_i_metadata.block)
+        uids = [i[0] for i in seen.values()]
+        return uids
 
     async def try_run_step(self, ttl: int):
         """Runs a step with ttl in a background process, without raising exceptions if it times out."""
@@ -893,7 +928,7 @@ class Validator:
             )
         )
 
-        # Every validator step should pick a single competition in a round-robin fashion
+        # Every validator step should pick a sing le competition in a round-robin fashion
         competition = competition_schedule[self.global_step % len(competition_schedule)]
 
         logging.info("Starting evaluation for competition: " + str(competition.id))
@@ -907,7 +942,7 @@ class Validator:
 
         # Pull relevant uids for step. If they aren't found in the model tracker on eval they will be skipped.
         uids = list(self.uids_to_eval[competition.id])
-        logging.info("UIDS information: " + str(uids))
+        
         if not uids:
             logging.debug(f"No uids to eval for competition {competition.id}.")
             # Check if no competitions have uids, if so wait 5 minutes to download.
@@ -979,8 +1014,12 @@ class Validator:
         kwargs["use_cache"] = True
 
         load_model_perf = PerfMonitor("Eval: Load model")
-        compute_loss_perf = PerfMonitor("Eval: Compute loss")
-
+        compute_loss_perf = PerfMonitor("Eval: Compute loss")        
+        
+        # Filter out duplicate models
+        uids = self.check_dup_hash(uids, uid_to_state)
+        logging.info("UIDS information: " + str(uids))
+        
         for uid_i in uids:
             score: float = math.inf
             score_details = {task.name: ScoreDetails() for task in eval_tasks}
@@ -1160,13 +1199,8 @@ class Validator:
         uid_to_score = {uid: state.score for uid, state in uid_to_state.items()}
         uid_to_block = {uid: state.block for uid, state in uid_to_state.items()}
 
-        # Filter to the list of uids that may at one point be a top model.
-        competitive_uids = fact.validation.compute_competitive_uids(
-            uid_to_score, uid_to_block, competition.constraints.epsilon_func
-        )
-
         # Log which models got dropped for the second pass.
-        dropped_uids = [uid for uid in uids if uid not in competitive_uids]
+        dropped_uids = [uid for uid in uids if uid not in uids]
         if dropped_uids:
             logging.info(
                 f"The following uids were not included in the win rate calculation because they did not beat the fully decayed score of any previously submitted model in this eval batch: {dropped_uids}."
@@ -1174,13 +1208,15 @@ class Validator:
 
         # Calculate new wins and win_rate with only the competitive uids considered.
         wins, win_rate = fact.validation.compute_wins(
-            competitive_uids,
+            uids,
             uid_to_score,
             uid_to_block,
             competition.constraints.epsilon_func,
             cur_block,
+            constants.min_diff,
+            constants.max_diff
         )
-
+        logging.info(str(win_rate))
         top_uid = max(win_rate, key=win_rate.get)
         self._record_eval_results(top_uid, cur_block, uid_to_state, competition.id)
 

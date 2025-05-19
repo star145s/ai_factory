@@ -179,3 +179,7 @@ chain_update_cadence = dt.timedelta(minutes=20)
 model_retry_cadence = 300  # Roughly 1 hour
 # How frequently to check the models given weights by other large validators.
 scan_top_model_cadence = dt.timedelta(minutes=30)
+# Min Different Score
+min_diff = 0.001
+# Max Different Score from top model
+max_diff = 0.05
