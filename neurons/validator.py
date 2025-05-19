@@ -1186,17 +1186,28 @@ class Validator:
 
         # Compute softmaxed weights based on win rate.
         model_weights = torch.tensor(
-            [win_rate.get(uid, 0) for uid in uids], dtype=torch.float32
+            [win_rate.get(uid, -999) for uid in uids], dtype=torch.float32
         )
-        step_weights = torch.softmax(model_weights / constants.temperature, dim=0)
+        model_weights[model_weights==0] = -999
+        
+        #Remove temperature, distribution based on win_rate
+        step_weights = torch.softmax(model_weights, dim=0)
 
         # Fill in metagraph sized tensor with the step weights of the evaluated models.
         with self.metagraph_lock:
             competition_weights = torch.zeros_like(torch.from_numpy(self.metagraph.S))
+            welcome_weights = torch.zeros_like(competition_weights)
 
         for i, uid_i in enumerate(uids):
             competition_weights[uid_i] = step_weights[i]
 
+            if cur_block - uid_to_block[uid_i] < 7200:
+                welcome_weights[uid_i] = 1.
+
+        # spend 5% emission for welcome gift
+        welcome_weights = welcome_weights/welcome_weights.sum()
+        competition_weights = 5/6 * competition_weights + 1/6 * welcome_weights
+        
         # Record weights for the current competition.
         self.competition_tracker.record_competition_weights(
             competition.id, competition_weights

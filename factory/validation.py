@@ -211,20 +211,13 @@ def compute_competitive_uids(
         uid: uid_to_score[uid] * fully_decayed_epsilon for uid in uid_to_block
     }
 
-    # Iterate through the models and only keep models who's loss is better than
-    # all models uploaded at an earlier block, after they've fully decayed.
-    # If the model cannot, then there exists at least one model at an earlier block which
-    # will always have a better epislon adjusted loss, thus it will never be the top model.
     competitive_uids = []
-    for uid, loss in uid_to_score.items():
-        # Check if the current UID beats all earlier (or same block) models at full decay.
-        # all([]) is true so we always keep the earliest model.
-        earlier_uids = [
-            i
-            for i, block in uid_to_block.items()
-            if i != uid and block <= uid_to_block[uid]
-        ]
-        if all(loss < fully_decayed_scores[uid_other] for uid_other in earlier_uids):
-            competitive_uids.append(uid)
 
+    # Compute mean score
+    mean_decayed_score = sum(fully_decayed_scores.values())/len(fully_decayed_scores) if len(fully_decayed_scores) > 0 else float("inf")
+    
+    for uid, loss in uid_to_score.items():
+        if loss < mean_decayed_score:
+            competitive_uids.append(uid)
+            
     return competitive_uids

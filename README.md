@@ -7,7 +7,7 @@
 Our AI Scientist Assistant generates novel paper ideas and outlines, enabling the rapid development of specialized AI pipelines. We also host key events: the AI Factory Conference, which showcases and peer-reviews new research, and the Community Workshop, focused on surveys and knowledge sharing.
 
 ### Current Miner Emission Distribution:
-- **Scientist AI Tracks**: 30%  
+- **Scientist AI Tracks**: 30% (5% for all new models to encourage participation)
 - **AI Factory Conference**: 0% (will increase to 50% after release)  
 - **Community Workshop**: 70%
 
