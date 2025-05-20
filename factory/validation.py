@@ -68,7 +68,7 @@ def iswin(
     return loss_i < loss_j
 
 def is_close(loss_i, loss_j, block_i, block_j, min_diff):
-    if abs(loss_i - loss_j) < min_diff and block_i < block_j:
+    if abs(loss_i - loss_j) < min_diff and block_i > block_j:
         return False 
     return True
     
