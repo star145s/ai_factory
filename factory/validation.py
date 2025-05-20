@@ -69,8 +69,8 @@ def iswin(
 
 def is_close(loss_i, loss_j, block_i, block_j, min_diff):
     if abs(loss_i - loss_j) < min_diff and block_i > block_j:
-        return False 
-    return True
+        return True 
+    return False
     
 def compute_wins(
     uids: typing.List[int],
