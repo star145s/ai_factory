@@ -1241,9 +1241,10 @@ class Validator:
                 welcome_weights[uid_i] = 1.
 
         # spend 5% emission for welcome gift
-        welcome_weights = welcome_weights/welcome_weights.sum()
-        competition_weights = 5/6 * competition_weights + 1/6 * welcome_weights
-        
+        if welcome_weights.sum() != 0:
+            welcome_weights = welcome_weights/welcome_weights.sum()
+            competition_weights = 5/6 * competition_weights + 1/6 * welcome_weights
+            
         # Record weights for the current competition.
         self.competition_tracker.record_competition_weights(
             competition.id, competition_weights
