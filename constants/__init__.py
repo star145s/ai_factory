@@ -53,7 +53,7 @@ WEIGHT_SYNC_MINER_MIN_PERCENT = 0.05
 
 # Validator eval batch size.
 BATCH_SIZE = 1
-MAX_BATCHES_PER_DATASET = 1024
+MAX_BATCHES_PER_DATASET = 64
 # Validators number of pages to eval over miners on each step.
 
 # These well be used after activation block
@@ -169,7 +169,7 @@ alpha = 0.5
 # 0.01 gives ~96% to best model with only ~3 receiving any weights.
 temperature = 0.01
 # validator eval batch min to keep for next loop.
-sample_min = 5
+sample_min = 20
 # Max number of uids that can be either pending eval or currently being evaluated.
 # We allow the sample_min per competition + 10 additional models to be held at any one time.
 updated_models_limit = sample_min * len(MODEL_CONSTRAINTS_BY_COMPETITION_ID) + 10
