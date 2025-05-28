@@ -114,7 +114,7 @@ def compute_text_loss(
     if not check_for_reasonable_output(
         model, token_inputs_1, token_inputs_2, pad_token_id
     ):
-        return [math.inf for _ in range(len(batches))]
+        return math.inf
 
     # Everything looks good! Continue to computing actual losses.
 
