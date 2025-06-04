@@ -12,7 +12,6 @@ from transformers import (
     LlamaForCausalLM,
     Qwen2ForCausalLM,
 )
-from models.deepseek.modeling_deepseek import DeepseekV3ForCausalLM
 
 import factory as fact
 from competitions.data import CompetitionId
@@ -61,7 +60,6 @@ PAGES_PER_EVAL_RES = 10
 
 # A mapping of block numbers to the supported model types as of that block.
 ALLOWED_MODEL_TYPES_1 = {
-    DeepseekV3ForCausalLM,
     LlamaForCausalLM,
     Qwen2ForCausalLM,
 }

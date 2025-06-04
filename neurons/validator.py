@@ -1083,8 +1083,7 @@ class Validator:
                     del model_i.pt_model
                     del model_i
                     import gc
-                    for i in range(100):
-                        gc.collect()
+                    gc.collect()
 
                 except Exception as e:
                     #logging.error("The error message when evaluating", str(e))

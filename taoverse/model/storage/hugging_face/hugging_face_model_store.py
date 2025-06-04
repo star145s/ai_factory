@@ -13,7 +13,6 @@ from taoverse.model.data import Model, ModelId
 from taoverse.model.model_updater import MinerMisconfiguredError
 from taoverse.model.storage.disk import utils
 from taoverse.model.storage.remote_model_store import RemoteModelStore
-from models.deepseek.modeling_deepseek import DeepseekV3ForCausalLM
 
 class HuggingFaceModelStore(RemoteModelStore):
     """Hugging Face based implementation for storing and retrieving a model."""
@@ -101,17 +100,7 @@ class HuggingFaceModelStore(RemoteModelStore):
 
         # Transformers library can pick up a model based on the hugging face path (username/model) + rev.
         try:
-            try:
-                model = AutoModelForCausalLM.from_pretrained(
-                    pretrained_model_name_or_path=repo_id,
-                    revision=model_id.commit,
-                    cache_dir=local_path,
-                    use_safetensors=True,
-                    token=token,
-                    **model_constraints.kwargs,
-                )
-            except Exception as e:
-                model = DeepseekV3ForCausalLM.from_pretrained(
+            model = AutoModelForCausalLM.from_pretrained(
                     pretrained_model_name_or_path=repo_id,
                     revision=model_id.commit,
                     cache_dir=local_path,

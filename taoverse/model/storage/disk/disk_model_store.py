@@ -9,7 +9,6 @@ import taoverse.utilities.logging as logging
 from taoverse.model.data import Model, ModelId
 from taoverse.model.storage.disk import utils
 from taoverse.model.storage.local_model_store import LocalModelStore
-from models.deepseek.modeling_deepseek import DeepseekV3ForCausalLM
 
 class DiskModelStore(LocalModelStore):
     """Local storage based implementation for storing and retrieving a model on disk."""
@@ -55,21 +54,14 @@ class DiskModelStore(LocalModelStore):
         pretrained_model_name_or_path = utils.get_local_model_snapshot_dir(
             self.base_dir, hotkey, model_id
         )
-        try:
-            model = AutoModelForCausalLM.from_pretrained(
+        
+        model = AutoModelForCausalLM.from_pretrained(
                 pretrained_model_name_or_path=pretrained_model_name_or_path,
                 revision=model_id.commit,
                 local_files_only=True,
                 use_safetensors=True,
                 **kwargs,
             )
-        except: 
-            model = DeepseekV3ForCausalLM.from_pretrained(
-                pretrained_model_name_or_path=pretrained_model_name_or_path,
-                revision=model_id.commit,
-                local_files_only=True,
-                use_safetensors=True,
-                **kwargs,)
 
         # Always try to retrieve a tokenizer from the model directory. If we do not find one leave it None on the Model.
         tokenizer = None

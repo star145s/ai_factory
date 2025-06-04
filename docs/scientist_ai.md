@@ -13,7 +13,7 @@ In the initial phase of the Research Track, participants will pretrain a 500-mil
 In this phase, the model scale will be increased to 4 billion parameters, and the training datasets will be extended. Below is the competition information:
 
 ### Model Constraints:
-- **Model types**: Qwen, LLaMA, DeepSeek  
+- **Model types**: Qwen, LLaMA  
 - **Model size**: 3–4 billion parameters  
 - **Tokenizer**: `ai-factory/giant`
 
