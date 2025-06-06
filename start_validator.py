@@ -22,10 +22,28 @@ from datetime import timedelta
 from shlex import split
 from typing import List
 import constants
+import shutil
+import os 
 
 log = logging.getLogger(__name__)
 UPDATES_CHECK_TIME = timedelta(minutes=15)
 
+def clear_huggingface_cache():
+    """
+    Deletes the Hugging Face cache directory (~/.cache/huggingface) if it exists.
+    Useful to avoid issues with corrupted or outdated model/tokenizer caches.
+    """
+    hf_cache_dir = os.path.expanduser("~/.cache/huggingface")
+    try:
+        shutil.rmtree(hf_cache_dir, ignore_errors=True)
+        log.info("Hugging Face cache cleared.")
+    except Exception as e:
+        log.warning("Failed to clear cache")
+    try:
+        shutil.rmtree("model-store", ignore_errors=True)
+        log.info("Model-store cache cleared.")
+    except Exception as e:
+        log.warning("Failed to clear model-store")
 
 def get_version() -> str:
     """Extract the version as current git commit hash"""
@@ -119,6 +137,9 @@ def main(pm2_name: str, args: List[str]) -> None:
     if a new version is available. Update is performed as simple `git pull --rebase`.
     """
 
+    #clear old model
+    clear_huggingface_cache()
+
     validator = start_validator_process(pm2_name, args)
     current_version = latest_version = get_version()
     log.info("Current version: %s", current_version)
@@ -138,6 +159,10 @@ def main(pm2_name: str, args: List[str]) -> None:
                 upgrade_packages()
 
                 stop_validator_process(validator)
+
+                #clear old model
+                clear_huggingface_cache()
+
                 validator = start_validator_process(pm2_name, args)
                 current_version = latest_version
 
