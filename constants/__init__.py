@@ -167,10 +167,10 @@ alpha = 0.5
 # 0.01 gives ~96% to best model with only ~3 receiving any weights.
 temperature = 0.01
 # validator eval batch min to keep for next loop.
-sample_min = 20
+sample_min = 15
 # Max number of uids that can be either pending eval or currently being evaluated.
 # We allow the sample_min per competition + 10 additional models to be held at any one time.
-updated_models_limit = sample_min * len(MODEL_CONSTRAINTS_BY_COMPETITION_ID) + 100
+updated_models_limit = sample_min * len(MODEL_CONSTRAINTS_BY_COMPETITION_ID) + 10
 # time required between updates to the chain.
 chain_update_cadence = dt.timedelta(minutes=20)
 # Number of blocks required between retrying evaluation of a model.
