@@ -1095,7 +1095,7 @@ class Validator:
                     f"Unable to load the model for {uid_i} or it belongs to another competition. Setting loss to inifinity for this competition."
                 )
 
-            uid_to_state[uid_i].score = score
+            uid_to_state[uid_i].score = score if isinstance(score, float) else float("inf")
             uid_to_state[uid_i].score_details = score_details
             logging.info(
                 f"Computed model score for uid: {uid_i} with score: {score}. Details: {score_details}"
