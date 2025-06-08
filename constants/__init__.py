@@ -83,6 +83,7 @@ MODEL_CONSTRAINTS_BY_COMPETITION_ID: Dict[CompetitionId, ModelConstraints] = {
         tokenizer="ai-factory/giant",
         kwargs={
             "torch_dtype": torch.bfloat16,
+            "device_map": "cpu"
             #"attn_implementation": "flash_attention_2",
         },
         eval_block_delay=EVAL_BLOCK_DELAY,

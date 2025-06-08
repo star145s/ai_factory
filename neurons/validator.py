@@ -1096,7 +1096,12 @@ class Validator:
                 )
 
             uid_to_state[uid_i].score = score if isinstance(score, float) else float("inf")
-            uid_to_state[uid_i].score_details = score_details
+            uid_to_state[uid_i].score_details = score_details if isinstance(score, float) else {task.name: ScoreDetails(
+                                                                                                                raw_score=float('inf'),
+                                                                                                                norm_score=float('inf'),
+                                                                                                                weighted_norm_score=float('inf'),
+                                                                                                                num_samples=0,
+                                                                                                            ) for task in eval_tasks}
             logging.info(
                 f"Computed model score for uid: {uid_i} with score: {score}. Details: {score_details}"
             )
