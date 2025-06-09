@@ -883,12 +883,14 @@ class Validator:
             model_i_metadata = self.model_tracker.get_model_metadata_for_miner_hotkey(
                 hotkey
             )
-
-            if model_i_metadata.id.secure_hash not in seen:
-                seen[model_i_metadata.id.secure_hash] = (uid_i, model_i_metadata.block)
-            else:
-                if model_i_metadata.block < seen[model_i_metadata.id.secure_hash][1]:
+            try:
+                if model_i_metadata.id.secure_hash not in seen:
                     seen[model_i_metadata.id.secure_hash] = (uid_i, model_i_metadata.block)
+                else:
+                    if model_i_metadata.block < seen[model_i_metadata.id.secure_hash][1]:
+                        seen[model_i_metadata.id.secure_hash] = (uid_i, model_i_metadata.block)
+            except: 
+                logging.info(f"Failed to load metadata of uid {uid_i}") 
         uids = [i[0] for i in seen.values()]
         return uids
 
