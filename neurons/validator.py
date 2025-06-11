@@ -580,6 +580,13 @@ class Validator:
                 f"Update loop: There are already {pending_uid_count + current_uid_count} synced models pending eval. Checking again in 5 minutes."
             )
             time.sleep(300)
+
+            # Select half of top models
+            with self.pending_uids_to_eval_lock:
+                for com_id in self.pending_uids_to_eval:
+                    sample_size = len(self.pending_uids_to_eval)//2
+                    if sample_size > 0:
+                        self.pending_uids_to_eval[com_id] = set(random.sample(list(self.pending_uids_to_eval[com_id]), sample_size))
             # Check to see if the pending uids have been cleared yet.
             pending_uid_count, current_uid_count = (
                 self.get_pending_and_current_uid_counts()
@@ -1054,44 +1061,45 @@ class Validator:
 
                 # Get the model locally and evaluate its loss.
                 model_i = None
-                with load_model_perf.sample():
-                    model_i = self.local_store.retrieve_model(
-                        hotkey, model_i_metadata.id, kwargs
-                    )
-                # Currently all competitions define a default tokenizer, so we set it here.
-                model_i.tokenizer = tokenizer
-                logging.info(
-                    f"Device: {str(model_i.pt_model.device)}"
-                )
-                
                 try:
-
-                    with compute_loss_perf.sample():
-                        # Run each computation in a subprocess so that the GPU is reset between each model.
-                        score, score_details = utils.run_in_subprocess(
-                            functools.partial(
-                                fact.validation.score_model,
-                                model_i,
-                                eval_tasks,
-                                samples,
-                                self.config.device,
-                            ),
-                            ttl=4300,
-                            mode="spawn",
+                    with load_model_perf.sample():
+                        model_i = self.local_store.retrieve_model(
+                            hotkey, model_i_metadata.id, kwargs
                         )
-                        logging.info(f"model is successfully evaluated with {str(score)} and {str(score_details)}")
-                    
-                    # clear old model
-                    del model_i.pt_model
-                    del model_i
-                    import gc
-                    gc.collect()
 
-                except Exception as e:
-                    #logging.error("The error message when evaluating", str(e))
-                    logging.error(
-                        f"Error in eval loop: {traceback.format_exc()}. Setting score for uid: {uid_i} to infinity."
+                    # Currently all competitions define a default tokenizer, so we set it here.
+                    model_i.tokenizer = tokenizer
+                    logging.info(
+                        f"Device: {str(model_i.pt_model.device)}"
                     )
+                    
+                    try:
+
+                        with compute_loss_perf.sample():
+                            # Run each computation in a subprocess so that the GPU is reset between each model.
+                            score, score_details = utils.run_in_subprocess(
+                                functools.partial(
+                                    fact.validation.score_model,
+                                    model_i,
+                                    eval_tasks,
+                                    samples,
+                                    self.config.device,
+                                ),
+                                ttl=4300,
+                                mode="spawn",
+                            )
+                            logging.info(f"model is successfully evaluated with {str(score)} and {str(score_details)}")
+
+                    except Exception as e:
+                        #logging.error("The error message when evaluating", str(e))
+                        logging.error(
+                            f"Error in eval loop: {traceback.format_exc()}. Setting score for uid: {uid_i} to infinity."
+                        )
+                except:
+                    logging.info("Failed to load pretrained model")
+                    score = None
+                    
+                
             else:
                 logging.debug(
                     f"Unable to load the model for {uid_i} or it belongs to another competition. Setting loss to inifinity for this competition."
