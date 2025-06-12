@@ -527,18 +527,7 @@ class Validator:
                         )
                     )
                 except MinerMisconfiguredError as e:
-                    self.model_tracker.on_model_evaluated(
-                        hotkey,
-                        0,  # Technically this is B7 but that is unused.
-                        EvalResult(
-                            block=curr_block,
-                            score=math.inf,
-                            # We don't care about the winning model for this check since we just need to log the model eval failure.
-                            winning_model_block=0,
-                            winning_model_score=0,
-                        ),
-                    )
-                    raise e
+                    updated = False
 
                 if updated:
                     metadata = self.model_tracker.get_model_metadata_for_miner_hotkey(
@@ -573,20 +562,15 @@ class Validator:
     def _wait_for_open_eval_slot(self) -> None:
         """Waits until there is at least one slot open to download and evaluate a model."""
         pending_uid_count, current_uid_count = self.get_pending_and_current_uid_counts()
-
+        retry = 0
         while pending_uid_count + current_uid_count >= self.config.updated_models_limit:
             # Wait 5 minutes for the eval loop to process them.
             logging.info(
-                f"Update loop: There are already {pending_uid_count + current_uid_count} synced models pending eval. Checking again in 5 minutes."
+                f"Update loop: There are already {pending_uid_count + current_uid_count} synced models pending eval. Checking again in 5 minutes. Retry {retry}"
             )
             time.sleep(300)
+            retry += 1
 
-            # Select half of top models
-            with self.pending_uids_to_eval_lock:
-                for com_id in self.pending_uids_to_eval:
-                    sample_size = len(self.pending_uids_to_eval)//2
-                    if sample_size > 0:
-                        self.pending_uids_to_eval[com_id] = set(random.sample(list(self.pending_uids_to_eval[com_id]), sample_size))
             # Check to see if the pending uids have been cleared yet.
             pending_uid_count, current_uid_count = (
                 self.get_pending_and_current_uid_counts()
