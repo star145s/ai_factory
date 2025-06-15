@@ -1,4 +1,5 @@
 import os
+import shutil
 import traceback
 from pathlib import Path
 from typing import Any, Dict
@@ -55,13 +56,18 @@ class DiskModelStore(LocalModelStore):
             self.base_dir, hotkey, model_id
         )
         
-        model = AutoModelForCausalLM.from_pretrained(
-                pretrained_model_name_or_path=pretrained_model_name_or_path,
-                revision=model_id.commit,
-                local_files_only=True,
-                use_safetensors=True,
-                **kwargs,
-            )
+        try:
+            model = AutoModelForCausalLM.from_pretrained(
+                    pretrained_model_name_or_path=pretrained_model_name_or_path,
+                    revision=model_id.commit,
+                    local_files_only=True,
+                    use_safetensors=True,
+                    **kwargs
+                )
+        except Exception as e:
+            if os.path.exists(pretrained_model_name_or_path):
+                shutil.rmtree(pretrained_model_name_or_path)
+            raise e
 
         # Always try to retrieve a tokenizer from the model directory. If we do not find one leave it None on the Model.
         tokenizer = None

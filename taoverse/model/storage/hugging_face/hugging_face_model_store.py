@@ -1,4 +1,5 @@
 import os
+import shutil
 import tempfile
 from dataclasses import replace
 from typing import Optional
@@ -109,6 +110,9 @@ class HuggingFaceModelStore(RemoteModelStore):
                     **model_constraints.kwargs,
                 )
         except ValueError as e:
+            #clean error model
+            shutil.rmtree(local_path)
+
             # This is treated as a MinerMisconfiguredError. Since the error in this case,
             # and after the above checks, most probably comes from `kwargs` misconfigured for
             # the type of model being loaded.
