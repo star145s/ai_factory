@@ -11,7 +11,7 @@ Miners are invited to **contribute knowledge** by researching and presenting AI 
 
 ### 🗓️ Timeline & Emissions  
 - **Submissions open:** Monday, April 28, 2025  
-- **Allocation:** 70% of miner emissions reserved for Workshop Community rewards  
+- **Allocation:** 20% of miner emissions reserved for Workshop Community rewards  
 - **Earning period:** Starts upon approval and then extends based on community engagement (views & likes)  
 
 ---

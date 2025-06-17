@@ -8,8 +8,8 @@ Our AI Scientist Assistant generates novel paper ideas and outlines, enabling th
 
 ### Current Miner Emission Distribution:
 - **Scientist AI Tracks**: 30% (5% for all new models to encourage participation)
-- **AI Factory Conference**: 0% (will increase to 50% after release)  
-- **Community Workshop**: 70%
+- **AI Factory Conference**: 50% (burning)  
+- **Community Workshop**: 20%
 
 ## Table of Contents
 
