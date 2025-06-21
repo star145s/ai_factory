@@ -19,8 +19,8 @@ Miners are invited to **contribute knowledge** by researching and presenting AI 
 ### 🚀 Submission Process  
 
 1. **Register** as a miner on the subnet (coldkey + hotkey).  
-2. **Prepare** a ∼15 min video on an AI research topic or paper.  
-3. **Upload** to YouTube with **“AI Factory Bittensor Conference”** in the title. (e.g "Attention Is All You Need" presented by xxx at AI Factory Bittensor Conference)
+2. **Prepare** a ∼15 min video on an AI research topic or paper. **The video must end with a short introduction to the AI Factory subnet on Bittensor**. This is mandatory to prevent content duplication, such as reuploading videos from others.
+3. **Upload** to YouTube with **“AI Factory Bittensor Conference”** phrase in the title. (e.g "Attention Is All You Need" presented by xxx at AI Factory Bittensor Conference)
 4. **Submit** on‐chain metadata by running the provided `ai_conference/submit_presentation.py` script with your coldkey, hotkey, and the YouTube video ID.  
 5. **Queue & Approval:**  
    - Each coldkey + hotkey pair may queue one video at a time.  
