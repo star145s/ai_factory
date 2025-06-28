@@ -52,11 +52,11 @@ WEIGHT_SYNC_MINER_MIN_PERCENT = 0.05
 
 # Validator eval batch size.
 BATCH_SIZE = 1
-MAX_BATCHES_PER_DATASET = 32
+MAX_BATCHES_PER_DATASET = 2
 # Validators number of pages to eval over miners on each step.
 
 # These well be used after activation block
-PAGES_PER_EVAL_RES = 10
+PAGES_PER_EVAL_RES = 1
 
 # A mapping of block numbers to the supported model types as of that block.
 ALLOWED_MODEL_TYPES_1 = {
@@ -65,8 +65,8 @@ ALLOWED_MODEL_TYPES_1 = {
 }
 
 # Emission distribution
-TRAINING_WEIGHT = 0.0
-CONFERENCE_WEIGHT = 0.7
+TRAINING_WEIGHT = 0
+CONFERENCE_WEIGHT = 0.8
 WORKSHOP_WEIGHT = 0.2
 
 # Synchronize on blocks roughly every 30 minutes.
@@ -168,7 +168,7 @@ alpha = 0.5
 # 0.01 gives ~96% to best model with only ~3 receiving any weights.
 temperature = 0.01
 # validator eval batch min to keep for next loop.
-sample_min = 10
+sample_min = 5
 # Max number of uids that can be either pending eval or currently being evaluated.
 # We allow the sample_min per competition + 10 additional models to be held at any one time.
 updated_models_limit = sample_min * len(MODEL_CONSTRAINTS_BY_COMPETITION_ID) + 10
