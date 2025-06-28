@@ -78,7 +78,7 @@ MODEL_CONSTRAINTS_BY_COMPETITION_ID: Dict[CompetitionId, ModelConstraints] = {
     CompetitionId.RES3B_MODEL: ModelConstraints(
         max_model_parameter_size=4_000_000_000,
         min_model_parameter_size=3_000_000_000,
-        sequence_length=4096,
+        sequence_length=10,
         allowed_architectures=ALLOWED_MODEL_TYPES_1,
         tokenizer="ai-factory/giant",
         kwargs={
