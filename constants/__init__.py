@@ -66,8 +66,8 @@ ALLOWED_MODEL_TYPES_1 = {
 
 # Emission distribution
 TRAINING_WEIGHT = 0
-CONFERENCE_WEIGHT = 0.2
-WORKSHOP_WEIGHT = 0.8
+CONFERENCE_WEIGHT = 0.0
+WORKSHOP_WEIGHT = 1.0
 
 # Synchronize on blocks roughly every 30 minutes.
 SYNC_BLOCK_CADENCE = 150
