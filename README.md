@@ -44,5 +44,5 @@ For inquiries, collaborations, or more information:
 
 - [Website](https://www.aifact.io/)
 
-- [Twitter](https://twitter.com/AI_Factory)
+- [Twitter](https://x.com/ai_factory_bit)
 
